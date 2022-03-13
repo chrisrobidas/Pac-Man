@@ -11,22 +11,23 @@ public class PacManMovement : MonoBehaviour
         Left
     }
     
-    [SerializeField] private float speed = 0.2f;
+    public Vector2 Destination = Vector2.zero;
+    
+    [SerializeField] private float speed = 5;
 
-    private Vector2 destination = Vector2.zero;
     private Direction currentDirection = Direction.Left;
     private Direction nextDirection = Direction.Left;
 
     private void Awake()
     {
         // We want Pac-Man to go a little bit to the left at the beginning
-        destination = transform.position - new Vector3(0.5f, 0, 0);
+        Destination = transform.position - new Vector3(0.5f, 0, 0);
     }
 
     private void FixedUpdate()
     {
         // Move closer to Destination
-        StartCoroutine(MoveOverSpeed(destination));
+        StartCoroutine(MoveOverSpeed(Destination));
         
         // Check for Input if not moving
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
@@ -38,26 +39,26 @@ public class PacManMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             nextDirection = Direction.Left;
         
-        if (Vector2.SqrMagnitude(destination - (Vector2)transform.position) < 0.0001)
+        if (Vector2.SqrMagnitude(Destination - (Vector2)transform.position) < 0.0001)
         {
             if ((nextDirection == Direction.Up || currentDirection == Direction.Up) && ValidateMovement(Vector2.up))
             {
-                destination = (Vector2)transform.position + Vector2.up;
+                Destination = (Vector2)transform.position + Vector2.up;
                 currentDirection = Direction.Up;
             }
             if ((nextDirection == Direction.Right || currentDirection == Direction.Right) && ValidateMovement(Vector2.right))
             {
-                destination = (Vector2)transform.position + Vector2.right;
+                Destination = (Vector2)transform.position + Vector2.right;
                 currentDirection = Direction.Right;
             }
             if ((nextDirection == Direction.Down || currentDirection == Direction.Down) && ValidateMovement(Vector2.down))
             {
-                destination = (Vector2)transform.position + Vector2.down;
+                Destination = (Vector2)transform.position + Vector2.down;
                 currentDirection = Direction.Down;
             }
             if ((nextDirection == Direction.Left || currentDirection == Direction.Left) && ValidateMovement(Vector2.left))
             {
-                destination = (Vector2)transform.position + Vector2.left;
+                Destination = (Vector2)transform.position + Vector2.left;
                 currentDirection = Direction.Left;
             }
         }
@@ -67,7 +68,7 @@ public class PacManMovement : MonoBehaviour
 
     private void UpdateAnimation()
     {
-        Vector2 movement = destination - (Vector2)transform.position;
+        Vector2 movement = Destination - (Vector2)transform.position;
         GetComponent<Animator>().SetFloat("MovementX", movement.x);
         GetComponent<Animator>().SetFloat("MovementY", movement.y);
     }
@@ -80,7 +81,7 @@ public class PacManMovement : MonoBehaviour
             GetComponent<Rigidbody2D>().MovePosition(position);
             yield return new WaitForEndOfFrame();
         }
-        GetComponent<Rigidbody2D>().MovePosition(destination);
+        GetComponent<Rigidbody2D>().MovePosition(Destination);
     }
     
     private bool ValidateMovement(Vector2 direction)
