@@ -6,6 +6,15 @@ public class GhostMovement : MonoBehaviour
     [SerializeField] private Transform[] waypoints;
     
     private int currentWaypoint;
+    private Vector2 initialPosition;
+
+    private LivesManager livesManager;
+
+    private void Awake()
+    {
+        livesManager = GameObject.Find("LivesManager").GetComponent<LivesManager>();
+        initialPosition = transform.position;
+    }
 
     private void FixedUpdate()
     {
@@ -17,8 +26,12 @@ public class GhostMovement : MonoBehaviour
             GetComponent<Rigidbody2D>().MovePosition(position);
         }
         else currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
-        
-        // Animation
+
+        UpdateAnimation();
+    }
+
+    private void UpdateAnimation()
+    {
         Vector2 direction = waypoints[currentWaypoint].position - transform.position;
         GetComponent<Animator>().SetFloat("MovementX", direction.x);
         GetComponent<Animator>().SetFloat("MovementY", direction.y);
@@ -26,7 +39,17 @@ public class GhostMovement : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D otherCollider)
     {
-        //if (otherCollider.name == "Pac-Man")
-            //Destroy(otherCollider.gameObject);
+        if (otherCollider.name == "Pac-Man")
+            livesManager.MakePacManDie();
+    }
+
+    public void Reset()
+    {
+        transform.position = initialPosition;
+        GetComponent<SpriteRenderer>().enabled = true;
+        Animator animator = GetComponent<Animator>();
+        animator.SetFloat("MovementX", 0);
+        animator.SetFloat("MovementY", 0);
+        currentWaypoint = 0;
     }
 }

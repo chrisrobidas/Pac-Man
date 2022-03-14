@@ -17,19 +17,26 @@ public class PacManMovement : MonoBehaviour
 
     private Direction currentDirection = Direction.Left;
     private Direction nextDirection = Direction.Left;
+    private Vector2 initialPosition;
+    private Animator animator;
 
     private void Awake()
     {
-        // We want Pac-Man to go a little bit to the left at the beginning
-        Destination = transform.position - new Vector3(0.5f, 0, 0);
+        Destination = GetStartingDestination();
+        initialPosition = transform.position;
+        animator = GetComponent<Animator>();
+    }
+
+    // We want Pac-Man to go a little bit to the left at the beginning
+    public Vector2 GetStartingDestination()
+    {
+        return transform.position - new Vector3(0.5f, 0, 0);
     }
 
     private void FixedUpdate()
     {
-        // Move closer to Destination
         StartCoroutine(MoveOverSpeed(Destination));
         
-        // Check for Input if not moving
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
             nextDirection = Direction.Up;
         if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
@@ -103,5 +110,17 @@ public class PacManMovement : MonoBehaviour
         RaycastHit2D hit = Physics2D.Linecast(position + direction * 1.1f, position);
         RaycastHit2D hit2 = Physics2D.Linecast(position + direction2 * 1.1f, position);
         return hit.collider.gameObject.name != "Map" && hit2.collider.gameObject.name != "Map";
+    }
+    
+    public void Reset()
+    {
+        transform.position = initialPosition;
+        GetComponent<SpriteRenderer>().enabled = true;
+        animator.SetBool("IsDead", false);
+        animator.SetFloat("MovementX", -1);
+        animator.SetFloat("MovementY", 0);
+        Destination = GetStartingDestination();
+        currentDirection = Direction.Left;
+        nextDirection = Direction.Left;
     }
 }

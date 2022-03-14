@@ -31,6 +31,9 @@ public class MusicManager : MonoBehaviour
 
     public void PlayWakaWakaSound()
     {
+        if (!wakaWakaAudioSource.isPlaying)
+            wakaWakaAudioSource.Play();
+        
         elapsedTimeWithoutEating = 0;
         wakaWakaAudioSource.UnPause();
     }
@@ -43,5 +46,10 @@ public class MusicManager : MonoBehaviour
     public void StopWakaWakaSound()
     {
         wakaWakaAudioSource.Stop();
+    }
+
+    public void PlayDeathSound()
+    {
+        ghostSirenAudioSource.PlayOneShot(deathSound);
     }
 }

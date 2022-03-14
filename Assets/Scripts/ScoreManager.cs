@@ -21,7 +21,7 @@ public class ScoreManager : MonoBehaviour
 
     private const int MAX_SCORE = 999999;
 
-    private void Awake()
+    public void Initialize()
     {
         if (PlayerPrefs.GetInt(PlayerPrefsData.APPLICATION_CLOSED_PROPERLY) == 0)
         {
@@ -36,14 +36,6 @@ public class ScoreManager : MonoBehaviour
         
         UpdateCurrentScoreSprites();
         UpdateHighScoreSprites();
-        
-        PlayerPrefs.SetInt(PlayerPrefsData.APPLICATION_CLOSED_PROPERLY, 0);
-    }
-
-    private void OnApplicationQuit()
-    {
-        ResetCurrentScore();
-        PlayerPrefs.SetInt(PlayerPrefsData.APPLICATION_CLOSED_PROPERLY, 1);
     }
 
     public void IncreaseScore(int amount)
@@ -62,7 +54,7 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    private void ResetCurrentScore()
+    public void ResetCurrentScore()
     {
         PlayerPrefs.SetInt(PlayerPrefsData.CURRENT_SCORE, 0);
     }
