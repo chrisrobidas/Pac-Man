@@ -28,7 +28,7 @@ public class PacManMovement : MonoBehaviour
     }
 
     // We want Pac-Man to go a little bit to the left at the beginning
-    public Vector2 GetStartingDestination()
+    private Vector2 GetStartingDestination()
     {
         return transform.position - new Vector3(0.5f, 0, 0);
     }
@@ -91,6 +91,7 @@ public class PacManMovement : MonoBehaviour
         GetComponent<Rigidbody2D>().MovePosition(Destination);
     }
     
+    // We check in the movement direction a bit to the left and right to see if there is a map collider
     private bool ValidateMovement(Vector2 direction)
     {
         Vector2 direction2 = direction;
