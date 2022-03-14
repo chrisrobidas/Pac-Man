@@ -9,8 +9,6 @@ public class Portal : MonoBehaviour
         otherCollider.transform.position = teleportLocation.position;
         
         if (otherCollider.name == "Pac-Man")
-        {
             otherCollider.gameObject.GetComponent<PacManMovement>().Destination = teleportLocation.position;
-        }
     }
 }
